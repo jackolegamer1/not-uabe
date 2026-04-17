@@ -1,4 +1,4 @@
-# 🛠️ NOT UABE v5.6
+# 🛠️ NOT UABE
 
 **NOT UABE** is a portable and lightweight Unity Asset Bundle editor specifically designed for Android. It allows you to view, export, and replace `Texture2D` assets directly in your smartphone's browser using Termux.
 
