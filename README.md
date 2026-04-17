@@ -6,6 +6,15 @@
 
 ---
 
+#
+## ⚠️ DISCLAIMER / WORK IN PROGRESS
+Currently, this tool **ONLY supports Texture2D assets**. 
+- Support for other asset types (AudioClip, Mesh, Sprite, etc.) is **under development**.
+- If you try to open bundles without textures, they may not display correctly.
+- Stay tuned for future updates!
+
+---
+
 ## 📥 Installation Methods
 
 ### 🟢 1. The Easiest Way (One-Click Setup)
