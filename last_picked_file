@@ -1,0 +1,72 @@
+import os
+import sys
+import subprocess
+
+try:
+    import UnityPy
+    from PIL import Image
+except ImportError:
+    print("Ошибка: Выполни 'pip install UnityPy python-pillow'")
+    sys.exit()
+
+def get_file_path(title):
+    print(f"\n[!] {title}")
+    if os.path.exists('tmp_file'): os.remove('tmp_file')
+    subprocess.run(['termux-storage-get', 'tmp_file'])
+    if os.path.exists('tmp_file'):
+        return 'tmp_file'
+    return None
+
+def main():
+    print("="*40)
+    print("  Unity Modder (ФИКС ИМЕН)  ")
+    print("="*40)
+
+    bundle_tmp = get_file_path("Выбери ФАЙЛ БАНДЛА")
+    if not bundle_tmp:
+        print("Файл не выбран!")
+        return
+
+    print("Загрузка бандла...")
+    env = UnityPy.load(bundle_tmp)
+    
+    textures = []
+    for obj in env.objects:
+        if obj.type.name == "Texture2D":
+            data = obj.read()
+            # Пытаемся достать имя разными способами
+            name = getattr(data, 'name', None) or getattr(data, 'm_Name', None) or f"Texture_{obj.path_id}"
+            textures.append({'data': data, 'name': name})
+
+    if not textures:
+        print("Текстуры не найдены!")
+        return
+
+    print(f"\nНайдено текстур: {len(textures)}")
+    for i, tex in enumerate(textures):
+        print(f"[{i}] {tex['name']}")
+
+    idx = input("\nНомер текстуры для замены: ")
+    target_tex = textures[int(idx)]['data']
+
+    png_tmp = get_file_path("Выбери PNG для замены")
+    if not png_tmp:
+        print("PNG не выбран!")
+        return
+
+    img = Image.open(png_tmp)
+    target_tex.image = img
+    target_tex.save()
+
+    out_name = input("\nНазови новый файл (например, new.bundle): ")
+    save_path = f"/sdcard/Download/{out_name}"
+    
+    with open("final_bundle", "wb") as f:
+        f.write(env.file.save())
+    
+    subprocess.run(['cp', 'final_bundle', save_path])
+    print(f"\n[ГОТОВО] Файл сохранен в Загрузки: {out_name}")
+
+if __name__ == "__main__":
+    main()
+

@@ -1,0 +1,4 @@
+Flask
+UnityPy
+Pillow
+texture2ddecoder
